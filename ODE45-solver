@@ -1,0 +1,18 @@
+function dydt = ODE45_solver(t,y,K,beta_w,beta_r,moo_w,moo_r,q1,q2,alpha11,alpha12,alpha21,alpha22,teta_1,teta_2,moo_1,moo_2,landa1,landa2)
+% t : Time
+% y : Vector which store bacterias population and antibiotic concentration 
+
+  dydt = zeros(4,1);
+  W = y(1);
+  R = y(2);
+  C1 = y(3);
+  C2 = y(4);
+
+  Xw = (alpha11*C1)+(alpha12*C2)+(landa1*C1*C2); %antibiotic killing W
+  Xr = (alpha21*C1)+(alpha22*C2)+(landa2*C1*C2); %antibiotic killing R
+  dydt(1) = beta_w*W*(1-((W+R)/K))-((q1*C1)+(q2*C2))*W-(Xw+moo_w)*W; %dW/dt
+  dydt(2) = beta_r*R*(1-((W+R)/K))+((q1*C1)+(q2*C2))*W-(Xr+moo_r)*R; %dR/dt
+  dydt(3) = teta_1-(moo_1*C1); %dC1/dt
+  dydt(4) = teta_2-(moo_2*C2); %dC2/dt
+   
+ end

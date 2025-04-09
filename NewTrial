@@ -1,0 +1,51 @@
+clc;
+clear;
+
+%Parameters
+beta_w=1; %birth of W
+beta_r=0.65; %birth of R
+K=10^9; %carrying capacity
+moo_w=0.2; %natural death of S
+moo_r=0.1; %natural death of R
+moo_1=0.0025; %removal of antibiotic 1
+moo_2=0.0021; %removal of antibiotic 2
+
+q1=10^-2; %mutation rate when exposed to antibiotic 1
+q2=10^-4; %mutation rate when exposed to antibiotic 2
+
+alpha11=0.2; %killing rate of antibiotic 1
+alpha12=0.2; %killing rate of antibiotic 1
+alpha21=0.022; %killing rate of antibiotic 2
+alpha22=0.022; %killing rate of antibiotic 2
+
+teta_1=0.21; %dose
+teta_2=0.42; %dose
+
+landa1=4; %drug interaction
+landa2=0.05; %drug interaction
+
+%ODE45_solver function called
+tspan=[0 100]; %time
+y0=[9*10^8 10^8 0 0]; %initial conditions
+[t,y1] = ode45(@(t,y)ODE45_solver(t,y,K,beta_w,beta_r,moo_w,moo_r,q1,q2,alpha11,alpha12,alpha21,alpha22,teta_1,teta_2,moo_1,moo_2,landa1,landa2),tspan,y0);
+
+W = (y1(:,1)); 
+R = (y1(:,2));
+C1 = (y1(:,3));
+C2 = (y1(:,4));
+
+%plotting
+figure
+semilogy(t,W,LineWidth=3);
+ylim([K/1000 K])
+hold on
+semilogy(t,R,LineWidth=3);
+hold on
+yyaxis right
+semilogy(t,C1,LineWidth=3);
+hold on
+semilogy(t,C2,LineWidth=3);
+legend('W','R','C1','C2')
+titletext1 = ['Lambda1 =' num2str(landa1)];
+titletext2 = ['Lambda2 =' num2str(landa2)];
+title(titletext1,titletext2)
